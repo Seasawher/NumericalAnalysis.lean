@@ -10,7 +10,7 @@ namespace Ch11
 
 /-- x の n 乗を計算する素朴なアルゴリズム。
 メモリを節約するために末尾再帰にしてある。 -/
-@[noinline] def naivePower (x n : Nat) :=
+def naivePower (x n : Nat) :=
   aux x n 1
 where aux (x n acc : Nat) :=
   match n with
@@ -41,8 +41,8 @@ where aux (x n acc : Nat) :=
 def doublePower.createTable (x n : Nat) : List Nat := Id.run do
   let mut table := [x]
   let mut head := x
-  let count := Nat.log2 n
-  for _ in [0:count] do
+  let count := toBinary n |>.length
+  for _ in [0:count-1] do
     -- この処理が一番重い
     table := head * head :: table
 
@@ -52,7 +52,6 @@ def doublePower.createTable (x n : Nat) : List Nat := Id.run do
 #guard doublePower.createTable 1 34 = [1, 1, 1, 1, 1, 1]
 #guard doublePower.createTable 2 5 = [16, 4, 2]
 #guard doublePower.createTable 2 7 = [16, 4, 2]
-#time #eval doublePower.createTable 2 110000
 
 /-- 繰り返し二乗法で `x ^ n` を計算する -/
 @[noinline] def doublePower (x n : Nat) : Nat :=
@@ -68,6 +67,8 @@ def doublePower.createTable (x n : Nat) : List Nat := Id.run do
 #guard doublePower 2 10 = 1024
 
 -- だいたい 0.8 秒くらい
+-- ちょっと早いかなという感じ
+-- （掛け算の数が指数関数的に減っている割には、余り速くなっていないのが気になる）
 #time #eval doublePower 2 110000
 
 -- Lean の組み込みの Nat.pow と比較するとだいたい同じくらい

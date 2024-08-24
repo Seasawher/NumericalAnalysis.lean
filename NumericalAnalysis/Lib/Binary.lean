@@ -19,8 +19,5 @@ partial def toBinary (n : Nat) : Binary :=
     else loop (n / 2) ((n % 2 == 1) :: acc)
   loop n []
 
-#eval toBinary 4
+#guard toBinary 2 = [true, false]
 #guard toBinary 5 = [true, false, true]
-
-
-#time #eval toBinary 400000
