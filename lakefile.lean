@@ -13,3 +13,6 @@ package "NumericalAnalysis" where
 lean_lib «NumericalAnalysis» where
   -- add library configuration options here
   globs := #[.submodules `NumericalAnalysis]
+
+lean_exe power_test where
+  root := `NumericalAnalysis.Ch1.PowerAlgorithm

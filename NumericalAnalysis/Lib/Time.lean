@@ -15,3 +15,6 @@ elab "#time " stx:command : command => do
 
   -- 差分を実行時間としてミリ秒単位で出力
   logInfo m!"time: {end_time - start_time}ms"
+
+/-- `#eval t` の実行時間を計測するコマンド -/
+macro "#time_eval" stx:term : command => `(#time #eval $stx)

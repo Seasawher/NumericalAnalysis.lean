@@ -1,3 +1,5 @@
+import NumericalAnalysis.Lib.SciNotation
+
 /- # 末尾再帰
 再帰関数を定義するときに、末尾再帰にすることでメモリを節約することができる。
 -/
@@ -21,4 +23,4 @@ def trPower (x n : Nat) : Nat :=
 
 -- 110000 とかを入れても遅いけど落ちることはない
 #eval trPower 2 10
-#eval trPower 2 110000
+#eval toSciNotation <| trPower 2 110000
