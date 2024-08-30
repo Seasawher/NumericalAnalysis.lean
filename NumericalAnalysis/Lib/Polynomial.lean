@@ -1,12 +1,18 @@
 
-/-- やっつけ実装の多項式 -/
+/- # 多項式
+表示するための多項式。
+
+## 技術的な問題点
+* 係数は Float にしたかったが、Float にすると係数が整数の場合でもゼロがたくさん表示されてしまうため
+係数を整数に限定している。
+-/
+
+/-- 多項式 -/
 structure Polynomial (var : String) where
   /-- 係数のリスト -/
   coes : List Int
 
 variable (var : String)
-
-#eval (2.000) == 2
 
 /-- 多項式を文字列として表示させる -/
 def Polynomial.toString (p : Polynomial var) : String :=
@@ -33,7 +39,11 @@ instance (var : String) : ToString (Polynomial var) := ⟨Polynomial.toString va
 def Polynomial.sample : Polynomial "X" :=
   ⟨[1, 2, 3, 4, 5]⟩
 
-#eval Polynomial.sample
+/-- info: X^4 + 2X^3 + 3X^2 + 4X^1 + 5 -/
+#guard_msgs in
+  #eval Polynomial.sample
 
--- 係数が 0 の項は表示されない
-#eval (⟨[1, 0, 3, 0, 0, 1]⟩ : Polynomial "z")
+/-- info: z^5 + 3z^3 + 1 -/
+#guard_msgs in
+  -- 係数が 0 の項は表示されない
+  #eval (⟨[1, 0, 3, 0, 0, 1]⟩ : Polynomial "z")
