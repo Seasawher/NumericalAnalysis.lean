@@ -28,5 +28,5 @@ def y := 470832.0
 #check_failure (NaN : Float)
 
 -- 10^308 を超えたあたりで inf になってしまう
-#eval 10.0 ^ 308
-#eval 10.0 ^ 309
+#eval 10.0 ^ 308 -- inf ではない
+#eval 10.0 ^ 309 -- inf
