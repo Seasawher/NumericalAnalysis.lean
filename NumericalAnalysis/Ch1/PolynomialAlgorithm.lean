@@ -1,5 +1,4 @@
-import NumericalAnalysis.Lib.Binary
-import NumericalAnalysis.Lib.Polynomial
+import NumericalAnalysis.Lib
 
 /- #
 
@@ -26,7 +25,7 @@ def Polynomial.naiveEval (p : Polynomial "x") (x : Int) : Int :=
     |>.foldl (· + ·) 0
 
 /-- サンプルの大きな多項式 -/
-private def bigPolynomial : Polynomial "x" := Polynomial.mk <| (List.range 5000 |>.map (fun i => Int.ofNat i))
+private def bigPolynomial : Polynomial "x" := Polynomial.mk <| (List.range 2000 |>.map (fun i => Int.ofNat i))
 
 #eval Polynomial.naiveEval (⟨[1, 1, 1, 1, 1]⟩ : Polynomial "x") 2
 

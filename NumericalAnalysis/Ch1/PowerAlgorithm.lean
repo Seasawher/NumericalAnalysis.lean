@@ -4,9 +4,7 @@
 
 このとき、計算方法の違いによって、かなり計算時間に違いが生じる。
 -/
-import NumericalAnalysis.Lib.SciNotation
-import NumericalAnalysis.Lib.Binary
-import NumericalAnalysis.Lib.Polynomial
+import NumericalAnalysis.Lib
 
 /-- x の n 乗を計算する素朴なアルゴリズム。
 オーバーフローを防ぐために末尾再帰にしてある。 -/
@@ -19,8 +17,8 @@ where aux (x n acc : Nat) :=
 
 #guard naivePower 2 10 = 1024
 
--- だいたい 1 秒くらいかかる
-#time #eval naivePower 2 110000
+-- だいたい 100 ミリ秒くらいかかる
+#time #eval naivePower 2 35000
 
 /- **繰り返し二乗法** を使うと、掛け算の回数を減らすことができる。
 
@@ -65,26 +63,18 @@ def doublePower (x n : Nat) : Nat :=
 #guard doublePower 3 5 = 243
 #guard doublePower 2 10 = 1024
 
--- だいたい 0.8 秒くらい
+-- だいたい 90 ミリ秒くらい
 -- ちょっと早いかなという感じ
 -- （掛け算の数が指数関数的に減っている割には、余り速くなっていないのが気になる）
-#time #eval doublePower 2 110000
+#time #eval doublePower 2 35000
 
 -- Lean の組み込みの Nat.pow と比較するとだいたい同じくらい
-#time #eval Nat.pow 2 110000
+#time #eval Nat.pow 2 35000
 
 def main : IO Unit := do
-  let start_time0 ← IO.monoMsNow
-  let result0 := naivePower 2 110000
-  let end_time0 ← IO.monoMsNow
-  IO.println s!"result: {toSciNotation result0}"
-  IO.println s!"naive power: ({end_time0 - start_time0} ms)"
-
-  let start_time1 ← IO.monoMsNow
-  let result1 := doublePower 2 110000
-  let end_time1 ← IO.monoMsNow
-  IO.println s!"result: {toSciNotation result1}"
-  dbg_trace (end_time1 - start_time1)
-  IO.println s!"double power: ({end_time1 - start_time1} ms)"
+  calc_time
+    IO.println (naivePower 2 35000)
+  vs
+    IO.println (doublePower 2 35000)
 
 #eval main
