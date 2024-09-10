@@ -1,4 +1,3 @@
-import NumericalAnalysis.Lib.Time
 
 /-- 2進数 -/
 def Binary := List Bool

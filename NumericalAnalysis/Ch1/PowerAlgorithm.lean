@@ -5,7 +5,6 @@
 このとき、計算方法の違いによって、かなり計算時間に違いが生じる。
 -/
 import NumericalAnalysis.Lib.SciNotation
-import NumericalAnalysis.Lib.Time
 import NumericalAnalysis.Lib.Binary
 import NumericalAnalysis.Lib.Polynomial
 
@@ -21,7 +20,7 @@ where aux (x n acc : Nat) :=
 #guard naivePower 2 10 = 1024
 
 -- だいたい 1 秒くらいかかる
-#time_eval naivePower 2 110000
+#time #eval naivePower 2 110000
 
 /- **繰り返し二乗法** を使うと、掛け算の回数を減らすことができる。
 
@@ -72,7 +71,7 @@ def doublePower (x n : Nat) : Nat :=
 #time #eval doublePower 2 110000
 
 -- Lean の組み込みの Nat.pow と比較するとだいたい同じくらい
-#time_eval Nat.pow 2 110000
+#time #eval Nat.pow 2 110000
 
 def main : IO Unit := do
   let start_time0 ← IO.monoMsNow
