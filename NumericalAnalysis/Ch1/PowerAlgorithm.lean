@@ -10,15 +10,17 @@ import NumericalAnalysis.Lib
 オーバーフローを防ぐために末尾再帰にしてある。 -/
 def naivePower (x n : Nat) :=
   aux x n 1
-where aux (x n acc : Nat) :=
+where
+  aux (x n acc : Nat) :=
   match n with
   | 0 => acc
   | n + 1 => aux x n (acc * x)
 
 #guard naivePower 2 10 = 1024
 
--- だいたい 100 ミリ秒くらいかかる
-#time #eval naivePower 2 35000
+-- だいたい 200 ミリ秒くらいかかる
+-- `=` の右辺は、計算結果の非常に長い数値を出力させないために指定しているので、何でもよい
+#time #eval naivePower 2 100000 = 0
 
 /- **繰り返し二乗法** を使うと、掛け算の回数を減らすことができる。
 
@@ -31,50 +33,37 @@ where aux (x n acc : Nat) :=
 を順に２乗することで計算して、`x ^ 34 = x ^ 32 * x ^ 2` で計算すると掛け算は 6 回で済む。
 -/
 
--- 対数を計算する組み込みの関数
-#check Nat.log2
+/-- notation class for `1` -/
+class One (α : Type) where
+  one : α
 
-/-- `x^(2^k), x^(2^(k-1)), ..., x⁸, x⁴, x², x` という x のべき乗のリストを作る。
-ただし `k` は `2 ^ k ≤ n < 2 ^ (k + 1)` となる自然数。-/
-def doublePower.createTable (x n : Nat) : List Nat := Id.run do
-  let mut table := [x]
-  let mut head := x
-  let count := toBinary n |>.length
-  for _ in [0:count-1] do
-    head := head * head
-    -- この処理が一番重い
-    table := head :: table
-  return table
+instance {α : Type} [One α] : OfNat α 1 where
+  ofNat := One.one
 
-#guard doublePower.createTable 1 34 = [1, 1, 1, 1, 1, 1]
-#guard doublePower.createTable 2 5 = [16, 4, 2]
-#guard doublePower.createTable 2 7 = [16, 4, 2]
+instance : One Nat where
+  one := 1
 
-/-- 繰り返し二乗法で `x ^ n` を計算する -/
-def doublePower (x n : Nat) : Nat :=
-  let table := doublePower.createTable x n
-  let bin := toBinary n
-  List.zip table bin
-    |>.filter (fun (_, b) => b)
-    |>.map (fun (x, _) => x)
-    |>.foldl (· * ·) 1
+/-- 繰り返し自乗法のためのヘルパー関数 -/
+def repeatedSquareAux {α : Type} [Mul α] (x acc : α) (n : Nat) : α :=
+  if n = 0 then
+    acc
+  else if n % 2 = 0 then
+    repeatedSquareAux (x * x) acc (n / 2)
+  else
+    repeatedSquareAux x (acc * x) (n - 1)
 
-#guard doublePower 2 16 = 65536
-#guard doublePower 3 5 = 243
-#guard doublePower 2 10 = 1024
+/-- 繰り返し自乗法 -/
+def repeatedSquare {α : Type} [Mul α] [One α] (x : α) (n : Nat) : α :=
+  repeatedSquareAux x 1 n
 
--- だいたい 90 ミリ秒くらい
--- ちょっと早いかなという感じ
--- （掛け算の数が指数関数的に減っている割には、余り速くなっていないのが気になる）
-#time #eval doublePower 2 35000
+#guard repeatedSquare 2 16 = 65536
+#guard repeatedSquare 3 5 = 243
+#guard repeatedSquare 2 10 = 1024
 
--- Lean の組み込みの Nat.pow と比較するとだいたい同じくらい
-#time #eval Nat.pow 2 35000
+-- だいたい 20 ミリ秒くらい
+-- かなり高速になった
+#time #eval repeatedSquare 2 100000 = 0
 
-def main : IO Unit := do
-  calc_time
-    IO.println (naivePower 2 35000)
-  vs
-    IO.println (doublePower 2 35000)
-
-#eval main
+-- Lean の組み込みの Nat.pow と比較すると
+-- こちらはだいたい 10 ミリ秒くらい
+#time #eval Nat.pow 2 100000 = 0
