@@ -9,6 +9,8 @@ package "NumericalAnalysis" where
     ⟨`linter.missingDocs, true⟩
   ]
 
+require proofwidgets from git "https://github.com/leanprover-community/ProofWidgets4" @ "v0.0.46"
+
 @[default_target]
 lean_lib «NumericalAnalysis» where
   -- add library configuration options here
