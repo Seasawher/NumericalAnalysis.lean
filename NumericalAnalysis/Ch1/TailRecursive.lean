@@ -1,8 +1,8 @@
-import NumericalAnalysis.Lib.SciNotation
-
 /- # 末尾再帰
 再帰関数を定義するときに、末尾再帰にすることでメモリを節約することができる。
 -/
+import NumericalAnalysis.Lib.SciNotation
+
 
 /-- `xⁿ` を計算する関数。素朴に定義したバージョン  -/
 def naivePower (x n : Nat) : Nat :=
